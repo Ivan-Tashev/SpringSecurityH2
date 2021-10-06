@@ -7,7 +7,7 @@
     <title>User</title>
 </head>
 <body>
-  <h1>Hello, <span th:text="${user.getUsername()}">User name</span></h1>
+  <h1>Hello, <span th:text="${user.name}">User name</span></h1>
 
 <div sec:authorize="hasRole('USER')">
     I am an user!

@@ -25,9 +25,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override // Set permissions and endpoints here
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("h2_console/**", "/home").permitAll()
+                .antMatchers("h2_console/**", "/home", "/").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasRole("USER")
-                .and().formLogin(); // get the Login form
+                .anyRequest().authenticated() // on any other route - authenticate
+                .and().formLogin()
+                .loginPage("/login").permitAll() // get the Login form
+                .usernameParameter("username") // <input type="text" name="username" />
+                .passwordParameter("password") // <input type="password" name="password" />
+                .and().logout().logoutSuccessUrl("/logout?logout").permitAll() // get Logout
+        ;
     }
 }
