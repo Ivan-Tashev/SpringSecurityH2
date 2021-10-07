@@ -7,13 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
 public class HomeController {
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Model model, HttpSession httpSession) {
+        model.addAttribute("name", httpSession.getAttribute("name"));
         return "home";
     }
 

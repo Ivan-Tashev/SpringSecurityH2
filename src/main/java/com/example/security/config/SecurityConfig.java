@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -30,10 +32,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated() // on any other route - authenticate
                 .and().formLogin()
-                .loginPage("/login").permitAll() // get the Login form
-                .usernameParameter("username") // <input type="text" name="username" />
-                .passwordParameter("password") // <input type="password" name="password" />
-                .and().logout().logoutSuccessUrl("/logout?logout").permitAll() // get Logout
-        ;
+//                .loginPage("/login").permitAll() // get the Login form
+//                .usernameParameter("username") // <input type="text" name="username" />
+//                .passwordParameter("password") // <input type="password" name="password" />
+                .and().logout().logoutSuccessUrl("/logout?logout").permitAll()
+                .and().csrf().csrfTokenRepository(csrfTokenRepository());
+                // <input type="hidden" th:name='${_csrf.parameterName}' th:value='${_csrf.token}'/>
+    }
+
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repo = new HttpSessionCsrfTokenRepository();
+        repo.setSessionAttributeName("_csrf");
+        return repo;
+
     }
 }
